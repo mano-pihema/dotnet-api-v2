@@ -15,6 +15,7 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
     {
         httpContext.Response.StatusCode = exception switch
         {
+            IdNotFoundException => StatusCodes.Status404NotFound,
             ApplicationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError,
         };

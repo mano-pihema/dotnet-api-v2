@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using todos2.Data;
+using todos2.Exceptions;
 using todos2.Interfaces;
 using todos2.Models;
 
@@ -47,7 +48,7 @@ public class TodosRepository : ITodosRepository
         var todo = await _context.Todos2.FindAsync(id);
         if (todo == null)
         {
-            throw new Exception($"Todo with id {id} not found.");
+            throw new IdNotFoundException($"Todo with id {id} not found");
         }
         return todo;
     }
