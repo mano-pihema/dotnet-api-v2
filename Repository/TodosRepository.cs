@@ -36,7 +36,7 @@ public class TodosRepository : ITodosRepository
         var todo = await _context.Todos2.FindAsync(id);
         if (todo == null)
         {
-            return null;
+            throw new IdNotFoundException($"Todo with id {id} not found");
         }
         _context.Remove(todo);
         await _context.SaveChangesAsync();
@@ -64,7 +64,7 @@ public class TodosRepository : ITodosRepository
 
         if (todo == null)
         {
-            return null;
+            throw new IdNotFoundException($"Todo with id {id} not found");
         }
 
         todo.IsCompleted = updateTodo.IsCompleted;
