@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using todos2.Data;
 
@@ -11,9 +12,11 @@ using todos2.Data;
 namespace todos2.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250210214340_TodoDetails")]
+    partial class TodoDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,35 +61,6 @@ namespace todos2.Migrations
                         });
                 });
 
-            modelBuilder.Entity("api.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Mike"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Tim"
-                        });
-                });
-
             modelBuilder.Entity("todos2.Models.Todo", b =>
                 {
                     b.Property<int>("Id")
@@ -108,12 +82,7 @@ namespace todos2.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Todos2");
 
@@ -124,8 +93,7 @@ namespace todos2.Migrations
                             CreatedAt = new DateTime(2023, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsCompleted = false,
                             Title = "Learn C#",
-                            UpdatedAt = new DateTime(2023, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 1
+                            UpdatedAt = new DateTime(2023, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -133,8 +101,7 @@ namespace todos2.Migrations
                             CreatedAt = new DateTime(2023, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsCompleted = false,
                             Title = "Learn ASP.NET Core",
-                            UpdatedAt = new DateTime(2023, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 2
+                            UpdatedAt = new DateTime(2023, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -142,15 +109,14 @@ namespace todos2.Migrations
                             CreatedAt = new DateTime(2023, 10, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsCompleted = false,
                             Title = "Build a Web API",
-                            UpdatedAt = new DateTime(2023, 10, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 1
+                            UpdatedAt = new DateTime(2023, 10, 16, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
             modelBuilder.Entity("api.Models.TodoDetails", b =>
                 {
                     b.HasOne("todos2.Models.Todo", null)
-                        .WithOne("TodoDetails")
+                        .WithOne("todoDetails")
                         .HasForeignKey("api.Models.TodoDetails", "TodoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -158,21 +124,7 @@ namespace todos2.Migrations
 
             modelBuilder.Entity("todos2.Models.Todo", b =>
                 {
-                    b.HasOne("api.Models.User", "User")
-                        .WithMany("Todos")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("api.Models.User", b =>
-                {
-                    b.Navigation("Todos");
-                });
-
-            modelBuilder.Entity("todos2.Models.Todo", b =>
-                {
-                    b.Navigation("TodoDetails");
+                    b.Navigation("todoDetails");
                 });
 #pragma warning restore 612, 618
         }

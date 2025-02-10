@@ -55,7 +55,7 @@ public class TodosRepository : ITodosRepository
 
     public async Task<IEnumerable<Todo>> GetTodosAsync()
     {
-        return await _context.Todos2.ToListAsync();
+        return await _context.Todos2.Include(t => t.TodoDetails).Include(t => t.User).ToListAsync();
     }
 
     public async Task<Todo?> UpdateTodoAsync(int id, UpdateTodo updateTodo)
