@@ -13,10 +13,13 @@ public class AppDBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connectionString =
-            "Server=localhost\\SQLEXPRESS;Database=Todo2;Trusted_Connection=True;TrustServerCertificate=true";
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString =
+                "Server=localhost\\SQLEXPRESS;Database=Todo2;Trusted_Connection=True;TrustServerCertificate=true";
 
-        optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseSqlServer(connectionString);
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
