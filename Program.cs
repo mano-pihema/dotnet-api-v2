@@ -1,8 +1,11 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using todos2.Data;
 using todos2.Exceptions;
 using todos2.Interfaces;
+using todos2.Models;
 using todos2.Repository;
+using todos2.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddDbContext<AppDBContext>();
 builder.Services.AddScoped<ITodosRepository, TodosRepository>();
+builder.Services.AddScoped<IValidator<CreateTodo>, TodoValidator>();
 
 builder.Services.AddControllers();
 

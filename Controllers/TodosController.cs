@@ -1,5 +1,7 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using todos2.Exceptions;
 using todos2.Interfaces;
 using todos2.Models;
 
@@ -10,10 +12,12 @@ namespace todos2.Controllers
     public class TodosController : ControllerBase
     {
         private readonly ITodosRepository _todosRepository;
+        private readonly IValidator<CreateTodo> _validator;
 
-        public TodosController(ITodosRepository todosRepository)
+        public TodosController(ITodosRepository todosRepository, IValidator<CreateTodo> validator)
         {
             _todosRepository = todosRepository;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -27,16 +31,18 @@ namespace todos2.Controllers
         public async Task<ActionResult<Todo>> GetById([FromRoute] int id)
         {
             var todo = await _todosRepository.GetTodoByIdAsync(id);
-            // if (todo == null)
-            // {
-            //     return NotFound();
-            // }
             return Ok(todo);
         }
 
         [HttpPost]
         public async Task<ActionResult<Todo>> Create([FromBody] CreateTodo todo)
         {
+            var validationResult = await _validator.ValidateAsync(todo);
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new BadRequestException(string.Join(", ", errorMessages));
+            }
             var newTodo = await _todosRepository.CreateTodoAsync(todo);
             return CreatedAtAction(nameof(GetById), new { id = newTodo.Id }, newTodo);
         }
@@ -48,21 +54,13 @@ namespace todos2.Controllers
         )
         {
             var updatedTodo = await _todosRepository.UpdateTodoAsync(id, update);
-            if (updatedTodo == null)
-            {
-                return NotFound();
-            }
             return Ok(updatedTodo);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-            var todo = await _todosRepository.DeleteTodoAsync(id);
-            if (todo == null)
-            {
-                return NotFound();
-            }
+            await _todosRepository.DeleteTodoAsync(id);
             return NoContent();
         }
     }
