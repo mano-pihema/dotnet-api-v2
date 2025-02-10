@@ -5,11 +5,14 @@ using todos2.Models;
 
 namespace todos2.Validator;
 
-public class TodoValidator : AbstractValidator<CreateTodo>
+public class TodoValidator : AbstractValidator<ITodo>
 {
-    public TodoValidator()
+    public TodoValidator(bool isPost)
     {
         RuleFor(x => x.Title).NotEmpty().WithMessage("Title is required");
-        RuleFor(x => x.IsCompleted).Equal(false).WithMessage("IsCompleted must be false");
+        if (isPost)
+        {
+            RuleFor(x => x.IsCompleted).Equal(false).WithMessage("IsCompleted must be false");
+        }
     }
 }

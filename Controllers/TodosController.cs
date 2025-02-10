@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using todos2.Exceptions;
 using todos2.Interfaces;
 using todos2.Models;
+using todos2.Validator;
 
 namespace todos2.Controllers
 {
@@ -12,12 +13,10 @@ namespace todos2.Controllers
     public class TodosController : ControllerBase
     {
         private readonly ITodosRepository _todosRepository;
-        private readonly IValidator<CreateTodo> _validator;
 
-        public TodosController(ITodosRepository todosRepository, IValidator<CreateTodo> validator)
+        public TodosController(ITodosRepository todosRepository)
         {
             _todosRepository = todosRepository;
-            _validator = validator;
         }
 
         [HttpGet]
@@ -37,7 +36,8 @@ namespace todos2.Controllers
         [HttpPost]
         public async Task<ActionResult<Todo>> Create([FromBody] CreateTodo todo)
         {
-            var validationResult = await _validator.ValidateAsync(todo);
+            var validator = new TodoValidator(true);
+            var validationResult = validator.Validate(todo);
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
@@ -53,6 +53,13 @@ namespace todos2.Controllers
             [FromRoute] int id
         )
         {
+            var validator = new TodoValidator(false);
+            var validationResult = validator.Validate(update);
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new BadRequestException(string.Join(", ", errorMessages));
+            }
             var updatedTodo = await _todosRepository.UpdateTodoAsync(id, update);
             return Ok(updatedTodo);
         }
