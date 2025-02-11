@@ -10,10 +10,10 @@ jobs:
 
     steps:
       - name: Checkout Repository  
-        uses: actions/checkout@v3  
+        uses: actions/checkout@v4  
 
       - name: Set up .NET  
-        uses: actions/setup-dotnet@v3  
+        uses: actions/setup-dotnet@v4  
         with:
           dotnet-version: '9.0.x'  
 
@@ -24,10 +24,4 @@ jobs:
         run: dotnet build apitests --configuration Release --no-restore  
 
       - name: Run Tests  
-        run: dotnet test apitests --configuration Release --no-build --logger trx --results-directory TestResults  
-
-      - name: Upload Test Results  
-        uses: actions/upload-artifact@v3  
-        with:
-          name: TestResults  
-          path: apitests/TestResults  
+        run: dotnet test apitests 
