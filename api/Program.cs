@@ -1,3 +1,5 @@
+using api.Interfaces;
+using api.Repository;
 using FluentValidation;
 using todos2.Data;
 using todos2.Exceptions;
@@ -14,6 +16,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddDbContext<AppDBContext>();
 builder.Services.AddScoped<ITodosRepository, TodosRepository>();
+builder.Services.AddScoped<IUsersRepository, UserRepository>();
 
 //builder.Services.AddScoped<IValidator<ITodo>, TodoValidator>();
 

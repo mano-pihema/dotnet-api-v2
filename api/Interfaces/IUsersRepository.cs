@@ -7,5 +7,5 @@ public interface IUsersRepository
 {
     Task<IEnumerable<User>> GetUsersAsync();
 
-    Task<User> GetUserAsync();
+    Task<User> GetUserAsync(int id);
 }
