@@ -10,4 +10,5 @@ public interface ITodosRepository
     Task<Todo> CreateTodoAsync(CreateTodo todo);
     Task<Todo?> UpdateTodoAsync(int id, UpdateTodo todo);
     Task<Todo?> DeleteTodoAsync(int id);
+    Task<IEnumerable<Todo>> GetTodosPaginatedAsync(int pageNumber, int pageSize);
 }

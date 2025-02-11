@@ -19,10 +19,20 @@ namespace todos2.Controllers
             _todosRepository = todosRepository;
         }
 
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<Todo>>> GetAll()
+        // {
+        //     var todos = await _todosRepository.GetTodosAsync();
+        //     return Ok(todos);
+        // }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Todo>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Todo>>> GetAll(
+            int pageNumber = 1,
+            int pageSize = 3
+        )
         {
-            var todos = await _todosRepository.GetTodosAsync();
+            var todos = await _todosRepository.GetTodosPaginatedAsync(pageNumber, pageSize);
             return Ok(todos);
         }
 

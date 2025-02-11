@@ -74,4 +74,15 @@ public class TodosRepository : ITodosRepository
         await _context.SaveChangesAsync();
         return todo;
     }
+
+    public async Task<IEnumerable<Todo>> GetTodosPaginatedAsync(int pageNumber, int pageSize)
+    {
+        var todos = await _context
+            .Todos2.Include(t => t.TodoDetails)
+            .Include(t => t.User)
+            .AsQueryable()
+            .ToListAsync();
+
+        return todos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+    }
 }
