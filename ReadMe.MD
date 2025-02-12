@@ -10,4 +10,5 @@ Upgrades include:
 - Tests are integrated with gibhub workflows
 - Refactored DB Context
 - Added User and TodoDetail models
-- one to one and one to many relationships
+- One to one and one to many relationships
+- Added a paginated get route for Todos
